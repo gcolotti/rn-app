@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Button, TextInput } from 'react-native';
+import { StyleSheet, View, Button, TextInput, Modal } from 'react-native';
 
 const GoalInput = props => {
     const [enteredGoal, setEnteredGoal] = useState('');
@@ -8,29 +8,54 @@ const GoalInput = props => {
         setEnteredGoal(enteredText);
     };
 
+    const addGoalHandler = () => {
+        props.onAddGoal(enteredGoal);
+        setEnteredGoal('');
+    };
+
     return (
-        <View style={styles.inputContainer}>
-            <TextInput
-                placeholder={'Course goals ...'}
-                style={styles.input}
-                onChangeText={goalInputHandler} 
-                value={enteredGoal} />                
-            <Button
-                title="ADD"
-                onPress={props.onAddGoal.bind(this, enteredGoal)} />
-        </View>
+        <Modal visible={props.visible} animationType="slide" >
+            <View style={styles.inputContainer}>
+                <TextInput
+                    placeholder={'Course goals ...'}
+                    style={styles.input}
+                    onChangeText={goalInputHandler} 
+                    value={enteredGoal} />
+                <View style={styles.btnContainer}>
+                    <View style={styles.btn}>
+                        <Button title="cancel" color="red" onPress={props.onCancel} />
+                    </View>
+                    <View style={styles.btn}>
+                        <Button title="add" onPress={addGoalHandler} />
+                    </View>
+                    
+                </View>                
+            </View>            
+        </Modal>
     );
 };
 
 const styles = StyleSheet.create({
     inputContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
         alignItems: 'center'
     },
     input: {
-        width: '80%', borderBottomColor: 'black',
-        borderBottomWidth: 1, padding: 10
+        width: '80%',
+        borderBottomColor: 'black',
+        borderBottomWidth: 1,
+        padding: 10,
+        marginBottom: 10
+    },
+    btnContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '80%',
+    },
+    btn: {
+        width: '49%',
     }
 });
 
