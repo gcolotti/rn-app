@@ -3,6 +3,7 @@ import { StyleSheet, View, FlatList, Button } from 'react-native';
 import GoalItem from './components/GoalItem';
 import GoalInput from './components/GoalInput';
 import Constants from 'expo-constants';
+import { setPlaneDetection } from 'expo/build/AR';
 
 export default function App() {
   //React hooks. useState() hook.  
@@ -12,6 +13,9 @@ export default function App() {
   const [isAddMode, setIsAddMode] = useState(false);
 
   const addGoalHandler = goalTitle => {
+    if(goalTitle.length === 0){
+      return;
+    }
     setCourseGoals(currentGoals => [
       ...currentGoals, {
         //I set the id field to a random number. This will be used as the key field.
@@ -29,13 +33,24 @@ export default function App() {
     });
   };
 
+  const removeAllGoalsHandler = () => {
+    setCourseGoals([]);
+  };
+
   const cancelGoalAdditionHandler = () => {
     setIsAddMode(false);
   };
 
   return (
     <View style={styles.screen}>
-      <Button title={'Add new goal'} onPress={() => setIsAddMode(true)}/>
+      <View style={styles.btnContainer}>
+        <View style={styles.btn}>
+          <Button title={'Add new goal'} onPress={() => setIsAddMode(true)}/>
+        </View>
+        <View style={styles.btn}>
+          <Button color={'red'}title={'Delete all'} onPress={removeAllGoalsHandler}/>
+        </View>
+      </View>      
       <GoalInput visible={isAddMode} onAddGoal={addGoalHandler} onCancel={cancelGoalAdditionHandler} />
       {/* //TODO: Check FlatList again */}
       <FlatList
@@ -63,6 +78,15 @@ export default function App() {
 const styles = StyleSheet.create({
   screen: {
     marginTop: Constants.statusBarHeight,
-    padding: 10,
+    padding: 15,
   },
+  btnContainer:{
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  btn: {
+    width: '45%',
+  }
 });
